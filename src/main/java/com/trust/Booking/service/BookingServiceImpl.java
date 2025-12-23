@@ -1,0 +1,79 @@
+package com.trust.Booking.service;
+
+import com.trust.Booking.model.Register;
+import com.trust.Booking.repository.BookingRepository;
+import com.trust.Booking.request.UserRequest;
+import com.trust.Booking.response.UserResponse;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.awt.print.Book;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class BookingServiceImpl implements BookingService {
+
+    @Autowired
+    BookingRepository bookingRepository;
+
+    @Override
+    public UserResponse saveBook(UserRequest request) {
+        Register register = new Register();
+        register.setBookingTime(LocalDateTime.now());
+        register.setName(request.getName());
+        register.setAddress(request.getAddress());
+        Register saved = bookingRepository.save(register);
+        UserResponse response = new UserResponse();
+        response.setAddress(saved.getAddress());
+        response.setName(saved.getName());
+        response.setId(saved.getId());
+        return response;
+
+    }
+
+    @Override
+    public UserResponse updateBook(UserRequest request) {
+        Optional<Register> userexists = bookingRepository.findById(request.getId());
+        Register user = new Register();
+        Register updated = new Register();
+        UserResponse response = new UserResponse();
+        if((userexists.isPresent())){
+            user = userexists.get();
+            user.setAddress(request.getAddress());
+            user.setName(request.getName());
+            user.setId(request.getId());
+           updated =  bookingRepository.save(user);
+           response.setAddress(updated.getAddress());
+           response.setName(updated.getName());
+        }
+        return response;
+    }
+
+    @Override
+    public String deleteBook(int id) {
+        Optional<Register> userexists = bookingRepository.findById(id);
+        Register user = new Register();
+        UserResponse response = new UserResponse();
+        if((userexists.isPresent())){
+            bookingRepository.deleteById(id);
+            return "successfully deleted";
+        }
+        return "already deleted";
+    }
+
+    @Override
+    public UserResponse getBooking(int id) {
+        Optional<Register> userexists = bookingRepository.findById(id);
+        Register user = new Register();
+        UserResponse response = new UserResponse();
+        if((userexists.isPresent())){
+            user = userexists.get();
+            response.setId(user.getId());
+            response.setName(user.getName());
+            response.setAddress(user.getAddress());
+        }
+        return response;
+    }
+}
