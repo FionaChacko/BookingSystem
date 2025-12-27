@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/register")
@@ -46,6 +47,13 @@ public class BookingController {
         log.info("Booking controller: getBooking starts with id {}",id);
         UserResponse response = bookingService.getBooking(id);
         log.info("BookingController: getBooking ends with response {}",response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllBook(){
+        log.info("Booking controller: getBooking starts for fetch all bookings");
+        List<UserResponse> response = bookingService.getAllBooking();
+        log.info("BookingController: getAllBooking ends with response {}",response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

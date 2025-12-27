@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.awt.print.Book;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -47,6 +49,7 @@ public class BookingServiceImpl implements BookingService {
            updated =  bookingRepository.save(user);
            response.setAddress(updated.getAddress());
            response.setName(updated.getName());
+           response.setId(updated.getId());
         }
         return response;
     }
@@ -76,4 +79,21 @@ public class BookingServiceImpl implements BookingService {
         }
         return response;
     }
+
+    @Override
+    public List<UserResponse> getAllBooking() {
+        List<Register> list = bookingRepository.findAll();
+        return list.stream()
+                .map(this::convertToUserResponse)
+                .collect(Collectors.toList());
+    }
+
+    private UserResponse convertToUserResponse(Register register) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(register.getId());
+        userResponse.setName(register.getName());
+        userResponse.setAddress(register.getAddress());
+        return userResponse;
+    }
+
 }
