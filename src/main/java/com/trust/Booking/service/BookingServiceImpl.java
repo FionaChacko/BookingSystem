@@ -2,6 +2,7 @@ package com.trust.Booking.service;
 
 import com.trust.Booking.constants.AppConstants;
 import com.trust.Booking.exception.BusinessException;
+import com.trust.Booking.mapper.UserMapper;
 import com.trust.Booking.model.Register;
 import com.trust.Booking.repository.BookingRepository;
 import com.trust.Booking.request.UserRequest;
@@ -23,6 +24,12 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     BookingRepository bookingRepository;
 
+   private final UserMapper mapper;
+
+    public BookingServiceImpl(UserMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Override
     public UserResponse saveBook(UserRequest request) {
         log.info("BookingService: save Book starts with request {}",request);
@@ -31,11 +38,9 @@ public class BookingServiceImpl implements BookingService {
         register.setBookingTime(LocalDateTime.now());
         register.setName(request.getName());
         register.setAddress(request.getAddress());
+        register.setActive(true);
         Register saved = bookingRepository.save(register);
-        UserResponse response = new UserResponse();
-        response.setAddress(saved.getAddress());
-        response.setName(saved.getName());
-        response.setId(saved.getId());
+        UserResponse response = mapper.registerToResponse(saved);
         log.info("BookingServiceImpl: save Booking ends");
         return response;
 
