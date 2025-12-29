@@ -17,6 +17,7 @@ public class Register {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private String email;
     private String address;
     private LocalDateTime bookingTime;
     private boolean isActive;

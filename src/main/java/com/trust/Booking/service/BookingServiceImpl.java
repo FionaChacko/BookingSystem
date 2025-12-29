@@ -34,10 +34,8 @@ public class BookingServiceImpl implements BookingService {
     public UserResponse saveBook(UserRequest request) {
         log.info("BookingService: save Book starts with request {}",request);
         isValidate(request);
-        Register register = new Register();
+        Register register = mapper.requestToRegister(request);
         register.setBookingTime(LocalDateTime.now());
-        register.setName(request.getName());
-        register.setAddress(request.getAddress());
         register.setActive(true);
         Register saved = bookingRepository.save(register);
         UserResponse response = mapper.registerToResponse(saved);
@@ -53,6 +51,9 @@ public class BookingServiceImpl implements BookingService {
         }
         if(ObjectUtils.isEmpty(request.getAddress())){
             throw new BusinessException(AppConstants.IS_ADDRESS_EMPTY);
+        }
+        if(ObjectUtils.isEmpty(request.getEmail())){
+            throw new BusinessException(AppConstants.IS_EMAIL_EMPTY);
         }
 
     }
@@ -70,13 +71,11 @@ public class BookingServiceImpl implements BookingService {
         UserResponse response = new UserResponse();
         if((userexists.isPresent())){
             user = userexists.get();
-            user.setAddress(request.getAddress());
-            user.setName(request.getName());
-            user.setId(request.getId());
+            user=mapper.requestToRegister(request);
+            user.setBookingTime(LocalDateTime.now());
+            user.setActive(true);
            updated =  bookingRepository.save(user);
-           response.setAddress(updated.getAddress());
-           response.setName(updated.getName());
-           response.setId(updated.getId());
+           response= mapper.registerToResponse(updated);
         }
         else{
             throw new BusinessException(AppConstants.USER_NOT_EXISTS);
@@ -105,9 +104,7 @@ public class BookingServiceImpl implements BookingService {
         UserResponse response = new UserResponse();
         if((userExists.isPresent())){
             user = userExists.get();
-            response.setId(user.getId());
-            response.setName(user.getName());
-            response.setAddress(user.getAddress());
+            response = mapper.registerToResponse(user);
         }
         else{
             throw new BusinessException(AppConstants.USER_NOT_EXISTS);
@@ -127,6 +124,7 @@ public class BookingServiceImpl implements BookingService {
         UserResponse userResponse = new UserResponse();
         userResponse.setId(register.getId());
         userResponse.setName(register.getName());
+        userResponse.setEmail(register.getEmail());
         userResponse.setAddress(register.getAddress());
         return userResponse;
     }
