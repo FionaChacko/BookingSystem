@@ -14,5 +14,5 @@ public interface BookingService {
 
     UserResponse getBooking(int id);
 
-    List<UserResponse> getAllBooking();
+    List<UserResponse> getAllBooking(int page, int size);
 }

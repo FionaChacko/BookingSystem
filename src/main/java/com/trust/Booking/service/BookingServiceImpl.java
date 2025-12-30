@@ -10,6 +10,9 @@ import com.trust.Booking.response.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -114,10 +117,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<UserResponse> getAllBooking() {
+    public List<UserResponse> getAllBooking(int page, int size) {
         log.info("BookingService getAllBooking method starts");
-        List<Register> list = bookingRepository.findAll();
-        return list.stream().map(this::convertToUserResponse).collect(Collectors.toList());
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<Register> userPage = bookingRepository.findAll(pageable);
+        return userPage.getContent().stream().map(mapper::registerToResponse).collect(Collectors.toList());
     }
 
     private UserResponse convertToUserResponse(Register register) {

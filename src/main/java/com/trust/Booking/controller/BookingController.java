@@ -50,9 +50,10 @@ public class BookingController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllBook(){
+    public ResponseEntity<List<UserResponse>> getAllBook(@RequestHeader(value = "X-Page-Number", defaultValue = "0") int page,
+                                                         @RequestHeader(value = "X-Page-Size", defaultValue = "10") int size){
         log.info("Booking controller: getBooking starts for fetch all bookings");
-        List<UserResponse> response = bookingService.getAllBooking();
+        List<UserResponse> response = bookingService.getAllBooking(page,size);
         log.info("BookingController: getAllBooking ends with response {}",response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
