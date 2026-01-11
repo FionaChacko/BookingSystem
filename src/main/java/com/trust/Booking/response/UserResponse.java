@@ -1,5 +1,6 @@
 package com.trust.Booking.response;
 
+import com.trust.Booking.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,6 @@ public class UserResponse {
     private String name;
     private String lastName;
     private String email;
-    private String address;
+    private Address address;
 
 }

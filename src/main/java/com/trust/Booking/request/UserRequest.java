@@ -1,5 +1,6 @@
 package com.trust.Booking.request;
 
+import com.trust.Booking.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class UserRequest {
     private String lastName;
     private String password;
     private String email;
-    private String address;
+    private Address address;
 
     public String getName() {
         return name;
@@ -24,11 +25,11 @@ public class UserRequest {
         this.name = name;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 }

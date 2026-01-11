@@ -20,7 +20,9 @@ public class Register {
     private String lastName;
     private String password;
     private String email;
-    private String address;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
     private LocalDateTime bookingTime;
     private boolean isActive;
 
