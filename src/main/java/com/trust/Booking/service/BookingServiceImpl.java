@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +30,9 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     BookingRepository bookingRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
    private final UserMapper mapper;
 
     public BookingServiceImpl(UserMapper mapper) {
@@ -40,6 +46,7 @@ public class BookingServiceImpl implements BookingService {
         Register register = mapper.requestToRegister(request);
         register.setBookingTime(LocalDateTime.now());
         register.setActive(true);
+        register.setPassword(passwordEncoder.encode(request.getPassword()));
         Register saved = bookingRepository.save(register);
         UserResponse response = mapper.registerToResponse(saved);
         log.info("BookingServiceImpl: save Booking ends");

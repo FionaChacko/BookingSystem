@@ -4,6 +4,7 @@ import com.trust.Booking.model.Register;
 import com.trust.Booking.request.UserRequest;
 import com.trust.Booking.response.UserResponse;
 import com.trust.Booking.service.BookingService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/register")
+@SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 public class BookingController {
 
