@@ -19,6 +19,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
+@OpenAPIDefinition(security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"))
 public class OpenAPIConfig {
     @Bean
     public OpenAPI customOpenAPI(@Value("${application-description}") String appDesciption,

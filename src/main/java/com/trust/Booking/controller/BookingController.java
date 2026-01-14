@@ -5,6 +5,7 @@ import com.trust.Booking.request.UserRequest;
 import com.trust.Booking.response.UserResponse;
 import com.trust.Booking.service.BookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/register")
-@SecurityRequirement(name = "Bearer Authentication")
+@SecurityRequirement(name = "bearerAuth")
 @Slf4j
 public class BookingController {
 
@@ -24,14 +25,14 @@ public class BookingController {
     BookingService bookingService;
 
     @PostMapping
-    public ResponseEntity<UserResponse> createBook(@RequestBody UserRequest request){
+    public ResponseEntity<UserResponse> createBook( @Valid @RequestBody UserRequest request){
         log.info("Booking controller: createBooking starts with request {}",request);
         UserResponse response = bookingService.saveBook(request);
         log.info("BookingController: createBooking ends with response {}",response);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @PutMapping
-    public ResponseEntity<UserResponse> updateBook(@RequestBody UserRequest request){
+    public ResponseEntity<UserResponse> updateBook(@Valid @RequestBody UserRequest request){
         log.info("Booking controller: updateBooking starts with request {}",request);
         UserResponse response = bookingService.updateBook(request);
         log.info("BookingController: updateBooking ends with response {}",response);
