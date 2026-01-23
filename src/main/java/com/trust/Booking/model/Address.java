@@ -1,6 +1,7 @@
 package com.trust.Booking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,6 @@ public class Address {
     private String place;
     private String city;
     private String state;
+    @NotBlank(message = "postcode is mandatory")
     private Integer postcode;
 }
