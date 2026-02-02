@@ -1,5 +1,6 @@
 package com.trust.Booking.service;
 
+import com.trust.Booking.model.Cruise;
 import com.trust.Booking.request.UserRequest;
 import com.trust.Booking.response.UserResponse;
 
@@ -15,4 +16,6 @@ public interface BookingService {
     UserResponse getBooking(int id);
 
     List<UserResponse> getAllBooking(int page, int size);
+
+    List<Cruise> getAllStaticData();
 }

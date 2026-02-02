@@ -1,5 +1,6 @@
 package com.trust.Booking.controller;
 
+import com.trust.Booking.model.Cruise;
 import com.trust.Booking.model.Register;
 import com.trust.Booking.request.UserRequest;
 import com.trust.Booking.response.UserResponse;
@@ -57,6 +58,14 @@ public class BookingController {
                                                          @RequestHeader(value = "X-Page-Size", defaultValue = "10") int size){
         log.info("Booking controller: getBooking starts for fetch all bookings");
         List<UserResponse> response = bookingService.getAllBooking(page,size);
+        log.info("BookingController: getAllBooking ends with response {}",response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/cruises")
+    public ResponseEntity<List<Cruise>> getAllStaticData(){
+        log.info("Booking controller: getBooking starts for fetch all static data");
+        List<Cruise> response = bookingService.getAllStaticData();
         log.info("BookingController: getAllBooking ends with response {}",response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -3,22 +3,29 @@ package com.trust.Booking.service;
 import com.trust.Booking.constants.AppConstants;
 import com.trust.Booking.exception.BusinessException;
 import com.trust.Booking.mapper.UserMapper;
+import com.trust.Booking.model.Cruise;
 import com.trust.Booking.model.Register;
 import com.trust.Booking.repository.BookingRepository;
 import com.trust.Booking.request.UserRequest;
 import com.trust.Booking.response.UserResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,8 +40,11 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-   private final UserMapper mapper;
+    @Autowired
+    RestTemplate restTemplate;
 
+   private final UserMapper mapper;
+    private static final String STATIC_DATA_URL = "http://STATICDATA/api/cruise";
     public BookingServiceImpl(UserMapper mapper) {
         this.mapper = mapper;
     }
@@ -129,6 +139,31 @@ public class BookingServiceImpl implements BookingService {
         PageRequest pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Register> userPage = bookingRepository.findAll(pageable);
         return userPage.getContent().stream().map(mapper::registerToResponse).collect(Collectors.toList());
+    }
+    @CircuitBreaker(name = "staticDataCB",fallbackMethod = "staticDataFallback")
+    @Override
+    public List<Cruise> getAllStaticData() {
+        ResponseEntity<List<Cruise>> responseEntity =
+                restTemplate.exchange(
+                        STATIC_DATA_URL,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<Cruise>>() {}
+                );
+
+        return responseEntity.getBody();
+
+
+    }
+    public List<Cruise> staticDataFallback(Throwable ex) {
+
+        List<Cruise> fallbackList = new ArrayList<>();
+
+        Cruise cruise = new Cruise();
+        cruise.setName("STATIC DATA SERVICE IS DOWN");
+
+        fallbackList.add(cruise);
+        return fallbackList;
     }
 
     private UserResponse convertToUserResponse(Register register) {
