@@ -66,7 +66,7 @@ public class BookingController {
     public ResponseEntity<List<Cruise>> getAllStaticData(){
         log.info("Booking controller: getBooking starts for fetch all static data");
         List<Cruise> response = bookingService.getAllStaticData();
-        log.info("BookingController: getAllBooking ends with response {}",response);
+        log.info("BookingController: getAllBooking by cruises ends with response {}",response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
